@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.lease.contract.mapper.ContractFileMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.lease.contract.vo.ContractFileVo">
+        SELECT o.*, c.code as contractCode
+        FROM tb_contract_file o join tb_contract c on o.contract_id = c.id
+        <where>
+            <if test="params.contractId !=null">
+                and o.`contract_id` = #{params.contractId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.estate.mapper.ParkFileMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.estate.vo.ParkFileVo">
+        SELECT o.*, p.name as parkName
+        FROM tb_park_file o join tb_park p on o.park_id = p.id
+        <where>
+            <if test="params.parkId !=null">
+                and o.`park_id` = #{params.parkId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

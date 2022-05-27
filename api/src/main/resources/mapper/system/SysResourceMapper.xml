@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.system.mapper.SysResourceMapper">
+
+    <select id="getMenuListByUsername" resultType="com.rihao.property.modules.system.entity.SysResource">
+        SELECT r.*
+        FROM tb_sys_resource r
+                 INNER JOIN tb_sys_role_resource rr ON rr.`resource_id` = r.`id`
+                 INNER JOIN tb_sys_role ro ON rr.`role_id` = ro.`id`
+                 INNER JOIN tb_sys_user u ON u.`role_id` = ro.`id`
+        WHERE u.`state` = 'enable'
+          AND ro.`state` = 'enable'
+          AND r.`state` = 'enable'
+          AND u.`username` = #{_parameter}
+    </select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.ent.mapper.EntMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.ent.vo.EntVo">
+        SELECT o.*,
+        (select  c.lease_start_date from tb_contract c where c.ent_id=o.id
+        order by c.lease_start_date LIMIT 1) as "leaseStartDate"
+        FROM tb_ent o
+        <where>
+            o.signup_status = 2
+            <if test="params.name !=null">
+                and o.`name` LIKE #{params.name}
+            </if>
+            <if test="params.legal !=null">
+                and o.`legal` LIKE #{params.legal}
+            </if>
+            <if test="params.newSettle !=null">
+                and o.`new_settle` = #{params.newSettle}
+            </if>
+            <if test="params.legalPhoneNumber !=null">
+                and o.`legal_phone_number` LIKE #{params.legalPhoneNumber}
+            </if>
+            <if test="params.unifiedSocialCreditCode !=null">
+                and o.`unified_social_credit_code` LIKE #{params.unifiedSocialCreditCode}
+            </if>
+            <if test="params.likeParam !=null">
+                and (
+                o.`name` LIKE concat('%',#{params.likeParam},'%')
+                or o.`legal` LIKE concat('%',#{params.likeParam},'%')
+                or o.`legal_phone_number` LIKE concat('%',#{params.likeParam},'%')
+                or o.`contact` LIKE concat('%',#{params.likeParam},'%')
+                or o.`contact_phone_number` LIKE concat('%',#{params.likeParam},'%')
+                )
+            </if>
+            <if test="params.parkIds !=null">
+                and o.park_id in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="groupDistrict"
+            resultType="com.rihao.property.modules.report.vo.ParkStatisticVo$DistrictEntNumStatisticVo">
+        SELECT registered_area AS district_name, COUNT(1) AS nums
+        FROM tb_ent
+        WHERE registered_area IS NOT NULL
+        GROUP BY registered_area
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.lease.unit.mapper.ContractUnitMapper">
+
+    <select id="selectUnitsInContractIds"
+            resultType="com.rihao.property.modules.lease.contract.vo.ContractUnitVo">
+        SELECT cu.*,u.`unit_no` AS `name` FROM tb_contract_unit cu LEFT JOIN tb_unit u ON cu.`unit_id` = u.`id`
+        WHERE cu.`contract_id` IN
+        <foreach collection="collection" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectUnitsByContractId"
+            resultType="com.rihao.property.modules.lease.contract.vo.ContractDetailVo$Unit">
+        SELECT u.id,
+               u.`unit_no`,
+               u.`floor_no`,
+               u.`usable_area`,
+               u.`built_up_area`,
+               u.`use_type`,
+               u.`status`,
+               u.`create_by`,
+               u.`create_time`,
+                u.building_id
+        FROM tb_unit u
+                 JOIN tb_contract_unit cu ON u.id = cu.`unit_id`
+        WHERE cu.`contract_id` = #{_parameter}
+        order by cu.sort
+    </select>
+
+    <select id="selectContractUnitByUnitDate" resultType="com.rihao.property.modules.lease.contract.vo.ContractUnitVo">
+        SELECT cu.id,
+        cu.`durdate`,
+        cu.`status`,
+        cu.`unit_id`,
+        cu.`contract_id`,
+        cu.`modify_time`,
+        cu.`modify_by`,
+        cu.`create_by`,
+        cu.`create_time`
+        FROM tb_contract_unit cu
+        join tb_contract c on c.id = cu.`contract_id`
+        WHERE cu.`unit_id` = #{unitId}
+        and c.`lease_start_date` <![CDATA[ <= ]]> #{currentlyDate}
+        and (c.`due_date` <![CDATA[ >= ]]> #{currentlyDate} or
+           c.`estimate_close_date` <![CDATA[ >= ]]> #{currentlyDate}
+        )
+        and cu.status='normal'
+        <if test="extContractId != null">
+            and c.`id` != #{extContractId}
+        </if>
+        LIMIT 1
+    </select>
+</mapper>

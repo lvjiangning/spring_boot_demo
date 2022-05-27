@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.system.mapper.SysLogMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.system.vo.SysLogVo">
+        SELECT l.id,u.real_name AS operName,l.create_time,l.request_ip,l.description,l.content
+        FROM tb_sys_log l LEFT JOIN tb_sys_user u ON l.create_by = u.username WHERE l.type='INFO'
+        <if test="params.operName !=null">
+            AND u.real_name LIKE #{params.operName}
+        </if>
+        <if test="params.description !=null">
+            AND l.description LIKE #{params.description}
+        </if>
+        <if test="params.operStartTime !=null">
+            AND l.create_time &gt;= #{params.operStartTime}
+        </if>
+        <if test="params.operEndTime !=null">
+            AND l.create_time &lt;= #{params.operEndTime}
+        </if>
+    </select>
+
+</mapper>

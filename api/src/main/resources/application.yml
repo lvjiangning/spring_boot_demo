@@ -1,0 +1,177 @@
+############################# 访问路径、端口tomcat start #############################
+server:
+  port: 8888
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 30
+    uri-encoding: UTF-8
+    max-swallow-size: -1
+############################# 访问路径、端口tomcat end ###############################
+################################ spring config start ###############################
+spring:
+  profiles:
+    active: dev
+  application:
+    name: property
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  banner:
+    charset: UTF-8
+    location: classpath:config/banner.txt
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# logback.xml中有详细的日志配置
+logging:
+  config: classpath:config/logback.xml
+  #  方便Spring Boot Admin页面上实时查看日志
+  file:
+    name: /home/app_logs/property.log
+################################ spring config end #################################
+
+
+############################## app start ##############################
+app:
+  ########################## Resource start ##########################
+  # 静态资源访问配置
+  resource-handlers: |
+    /static/**=classpath:/static/
+    /templates/**=classpath:/templates/
+    swagger-ui.html=classpath:/META-INF/resources/
+    /webjars/**=classpath:/META-INF/resources/webjars/
+  ########################## Resource end ############################
+
+  ######################## Spring Shiro start ########################
+  shiro:
+    # 是否启用
+    enable: true
+    # shiro ini 多行字符串配置
+    filter-chain-definitions: |
+      /=anon
+      /static/**=anon
+      /templates/**=anon
+      /druid/**=anon
+      /hello/world=anon
+      /sysLog/**=anon
+      /verificationCode/**=anon
+      /resource/**=anon
+      /fooBar/**=anon
+      /index=anon
+      /enum=anon
+    # 权限配置
+    permission:
+      # 排除登陆登出相关
+      - urls: /api/login,/api/logout,/api/app/intro,/api/contract/write,/api/contract/write/{id}
+        permission: anon
+        # 排除静态资源
+      - urls: /static/**,/templates/**
+        permission: anon
+        # 排除Swagger
+      - urls: /api/docs,/swagger-ui.html,/webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs,/csrf
+        permission: anon
+        # 排除SpringBootAdmin
+      - urls: /,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**
+        permission: anon
+  ######################## Spring Shiro end ##########################
+
+  ############################ JWT start #############################
+  jwt:
+    # token请求头名称
+    token-name: token
+    # jwt密钥
+    secret: 666666
+    # 发行人
+    issuer: wangyu
+    # 观众
+    audience: web
+    # 默认过期时间1小时，单位：秒
+    expire-second: 36000
+    # 是否刷新token
+    refresh-token: false
+    # 刷新token的时间间隔，默认10分钟，单位：秒
+    refresh-token-countdown: 600
+    # redis校验jwt token是否存在,可选
+    redis-check: true
+    # true: 同一个账号只能是最后一次登陆token有效，false：同一个账号可多次登陆
+    single-login: false
+    # 盐值校验，如果不加自定义盐值，则使用secret校验
+    salt-check: true
+  ############################ JWT end ###############################
+
+############################### app end ###############################
+
+############################### anteng boot start ###############################
+anteng:
+  boot:
+    mvc:
+      json-pretty-print: true
+      json-include: always
+      cors:
+        enable: true
+        allowed-methods: OPTIONS,HEAD,GET,POST,PUT,DELETE
+############################### anteng boot end ###############################
+############################## Spring boot admin start ##############################
+
+---
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:9001/
+        username: admin
+        password: 111111
+
+# 开启和暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      enabled: true         #可在线查看日志
+    flowable:
+      enabled: true      #可监控flowable
+# 自定义项目信息，Spring Boot Admin展示使用
+info:
+  project-groupId: '@project.groupId@'
+  project-artifactId: '@project.artifactId@'
+  project-name: '@project.name@'
+  project-finalName: '@project.build.finalName@'
+  project-author: rihaotech
+  project-description: '@project.description@'
+  project-sourceEncoding: '@project.build.sourceEncoding@'
+  project-mybatis-plus-version: '@mybatis.plus.version@'
+  project-version: '@project.version@'
+############################## Spring boot admin end ###############################
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    default-enum-type-handler: com.rihao.property.common.enums.EnumMixTypeHandler
+app:
+  aliyun-oss:
+    accessKeyId: LTAI0zVbhlQjiTDZ
+    secret: KA3aDaSm8B9VP7Wg3F7o5p45gIhsne
+    bucket: lg-expert
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+
+
+#上传路径
+file.upload.path: D:\rcm\file
+ #启动远程附件服务
+enableFileRemoteService : false
+#swftoolsSetupDir 安装路径
+swftoolsSetupDir :

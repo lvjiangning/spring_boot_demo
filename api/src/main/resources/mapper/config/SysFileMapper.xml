@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.config.mapper.SysFileMapper">
+    <update id="updateFileForBusId" >
+        update sys_file set business_id=#{busId} where type=#{type} and
+        <if test="fileIds != null">
+            <foreach collection="fileIds" item="fileId" open="" close="" separator="or">
+                id = #{fileId}
+            </foreach>
+        </if>
+    </update>
+
+    <update id="deleteByBusinessId">
+        update sys_file set business_id=null where
+        business_id = #{busId} and type=#{type}
+        <if test="fileIds != null">
+            <foreach collection="fileIds" item="fileId" open="" close="" separator="">
+                and id != #{fileId}
+            </foreach>
+        </if>
+    </update>
+
+
+
+</mapper>

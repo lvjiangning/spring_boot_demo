@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.system.mapper.SysRoleResourceMapper">
+
+    <select id="getPressionCodesByRoleId" resultType="java.lang.String">
+        SELECT p.code
+        FROM tb_sys_role r
+                 INNER JOIN tb_sys_role_resource rp
+                            ON r.id = rp.role_id
+                 INNER JOIN tb_sys_resource p
+                            ON rp.resource_id = p.id
+        WHERE r.state = 'enable'
+          AND p.state = 'enable'
+          AND r.id = #{roleId};
+    </select>
+</mapper>

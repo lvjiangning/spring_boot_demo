@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.system.mapper.SysUserMapper">
+
+    <select id="selectByAdminQueryParam" resultType="com.rihao.property.modules.system.vo.SysUserVo">
+        SELECT a.id,a.role_id,a.`state`,a.last_login_time,
+        b.name AS role_name, a.establish_id as establishId,
+        a.`username`,a.`real_name`,a.`gender`,
+        a.`telephone`,a.create_time
+        FROM tb_sys_user a LEFT JOIN tb_sys_role b ON a.role_id = b.id
+        <where>
+            <if test="params.username !=null">
+                and a.`username` LIKE #{params.username}
+            </if>
+            <if test="params.realName !=null">
+                and a.`real_name` LIKE #{params.realName}
+            </if>
+            <if test="params.role !=null">
+                and b.id = #{params.role}
+            </if>
+            <if test="params.establishId !=null">
+                and a.establish_id = #{params.establishId}
+            </if>
+            and b.id != 1
+        </where>
+    </select>
+</mapper>

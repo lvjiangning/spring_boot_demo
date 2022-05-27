@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.lease.contract.mapper.ContractMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        select * from (
+        SELECT o.*,e.name as "entName",case when o.estimate_close_date is null then o.due_date else o.estimate_close_date end as endDate
+        FROM tb_contract o
+        join tb_ent e on o.ent_id = e.id
+        <if test="params.likeParam !=null">
+            left join tb_park p on o.park_id= p.id
+        </if>
+        <where>
+            o.sign_up_status = 5
+            <if test="params.status !=null">
+                and o.status = #{params.status}
+            </if>
+            <if test="params.likeParam !=null">
+                and (
+                p.`name` LIKE concat('%',#{params.likeParam},'%')
+                or e.`name` LIKE concat('%',#{params.likeParam},'%')
+                or o.id in (
+                select u.contract_id from tb_contract_unit u
+                LEFT JOIN tb_building b on u.building_id=b.id
+                left join tb_unit un on un.id=u.unit_id
+                where b.name like concat('%',#{params.likeParam},'%')
+                or un.unit_no like concat('%',#{params.likeParam},'%'))
+                )
+            </if>
+            <if test="params.parkId !=null">
+                and o.park_id = #{params.parkId}
+            </if>
+            <if test="params.buildingId !=null">
+                and o.id in (select contract_id from  tb_contract_unit where building_id=#{params.buildingId} )
+            </if>
+            <if test="params.entName !=null">
+                and o.ent_name LIKE #{params.entName}
+            </if>
+            <if test="params.leaseStartDate !=null">
+                and o.lease_start_date >= #{params.leaseStartDate}
+            </if>
+            <if test="params.dueDate !=null">
+                and o.due_date &lt;= #{params.dueDate}
+            </if>
+            <if test="params.buildingIds !=null">
+                and o.`building_id` in (#{params.buildingIds})
+            </if>
+            <if test="params.establishId !=null">
+                and o.`establish_id` = #{params.establishId}
+            </if>
+            <if test="params.contact !=null">
+                and o.`contact` like #{params.contact}
+            </if>
+            <if test="params.contactPhoneNumber !=null">
+                and o.`contact_phone_number` like #{params.contactPhoneNumber}
+            </if>
+            <if test="params.code !=null">
+                and o.`code` like #{params.code}
+            </if>
+            <if test="params.unit !=null">
+                and o.`unit` like #{params.unit}
+            </if>
+            <if test="params.depositStatus !=null">
+                and o.`deposit_status` = #{params.depositStatus}
+            </if>
+            <if test="params.parkIds !=null">
+                and o.`park_id` in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) a
+        order by a.park_id,a.endDate
+    </select>
+
+    <select id="selectWaitByQueryParam" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+       select * from (
+        SELECT o.*, e.name as entName, e.id as entId,,case when o.estimate_close_date is null then o.due_date else o.estimate_close_date end as endDate
+        FROM tb_contract o join tb_ent e on o.ent_id = e.id
+        <if test="params.likeParam !=null">
+            left join tb_park p on o.park_id= p.id
+        </if>
+        <where>
+            o.sign_up_status = 5
+            <if test="params.parkId !=null">
+                and o.park_id = #{params.parkId}
+            </if>
+            <if test="params.buildingId !=null">
+                and o.building_id = #{params.buildingId}
+            </if>
+            <if test="params.entName !=null">
+                and o.ent_name LIKE #{params.entName}
+            </if>
+            <if test="params.leaseStartDate !=null">
+                and o.lease_start_date >= #{params.leaseStartDate}
+            </if>
+            <if test="params.dueDate !=null">
+                and o.due_date &lt;= #{params.dueDate}
+            </if>
+            <if test="params.buildingIds !=null">
+                and o.`building_id` in (#{params.buildingIds})
+            </if>
+            <if test="params.establishId !=null">
+                and o.`establish_id` = #{params.establishId}
+            </if>
+            <if test="params.contact !=null">
+                and o.`contact` like #{params.contact}
+            </if>
+            <if test="params.contactPhoneNumber !=null">
+                and o.`contact_phone_number` like #{params.contactPhoneNumber}
+            </if>
+            <if test="params.code !=null">
+                and o.`code` like #{params.code}
+            </if>
+            <if test="params.unit !=null">
+                and o.`unit` like #{params.unit}
+            </if>
+            <if test="params.depositStatus !=null">
+                and o.`deposit_status` = #{params.depositStatus}
+            </if>
+            <if test="params.likeParam !=null">
+                and (
+                p.`name` LIKE concat('%',#{params.likeParam},'%')
+                or e.`name` LIKE concat('%',#{params.likeParam},'%')
+                or o.id in (
+                select  u.contract_id from tb_contract_unit u
+                LEFT JOIN tb_building  b on u.building_id=b.id
+                left join tb_unit un on un.id=u.unit_id
+                where b.name like  concat('%',#{params.likeParam},'%')
+                and un.unit_no like concat('%',#{params.likeParam},'%'))
+                )
+            </if>
+            <if test="params.parkIds !=null">
+                and o.`park_id` in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            and (o.status = 'wait_file' or o.status = 'wait_contract')
+        </where>
+        )  a order by a.park_id,a.endDate
+    </select>
+
+    <select id="selectRunningListForIndex" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        select *
+        from tb_contract
+        where status = 'running' limit 6;
+    </select>
+
+
+
+    <select id="selectExpiration" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+    select * from(
+        select a.*,e.name as entName,
+        TIMESTAMPDIFF(MONTH,STR_TO_DATE(NOW(), '%Y-%m-%d'), STR_TO_DATE(a.due_date, '%Y-%m-%d')) as intervalMonth,
+        TIMESTAMPDIFF(DAY,STR_TO_DATE(NOW(), '%Y-%m-%d'), STR_TO_DATE(a.due_date, '%Y-%m-%d')) as intervalDay,
+        case when a.estimate_close_date is null then a.due_date else   a.estimate_close_date end as endDate
+        FROM tb_contract a join tb_ent e on a.ent_id = e.id
+        <if test="params.likeParam !=null">
+            left join tb_park p on o.park_id= p.id
+        </if>
+
+       <where>
+           <if test="params.parkId !=null">
+               and a.park_id = #{params.parkId}
+           </if>
+        <if test="params.expirationMonth !=null">
+            and   TIMESTAMPDIFF(MONTH,STR_TO_DATE(NOW(), '%Y-%m-%d'), STR_TO_DATE(a.due_date, '%Y-%m-%d')) &lt;=
+            #{params.expirationMonth}
+        </if>
+        <if test="params.parkIds !=null">
+            and a.`park_id` in
+            <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="params.likeParam !=null">
+            and (
+            p.`name` LIKE concat('%',#{params.likeParam},'%')
+            or e.`name` LIKE concat('%',#{params.likeParam},'%')
+            or a.id in (
+            select  u.contract_id from tb_contract_unit u
+            LEFT JOIN tb_building  b on u.building_id=b.id
+            left join tb_unit un on un.id=u.unit_id
+            where b.name like  concat('%',#{params.likeParam},'%')
+            and un.unit_no like concat('%',#{params.likeParam},'%'))
+            )
+        </if>
+        and a.status = 'running'
+       </where>
+        ) o
+        order by o.park_id,o.endDate
+    </select>
+
+    <select id="selectHistoryByQueryParam" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        SELECT o.*
+        FROM tb_contract o WHERE o.id != 0
+        <if test="params.entId !=null">
+            and o.`ent_id` = #{params.entId}
+        </if>
+        <if test="params.establishId !=null">
+            and o.`establish_id` = #{params.establishId}
+        </if>
+        <if test="params.parkIds !=null">
+            and o.`park_id` in
+            <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="useHouseDetailReport" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        SELECT o.*,a.unit_id as "unitId"
+         from tb_contract_unit a
+         left join tb_contract o on a.contract_id=o.id
+        <where>
+        <if test="params.startDate !=null">
+                and o.lease_start_date <![CDATA[ <= ]]> #{params.startDate}
+                and (o.due_date <![CDATA[ >= ]]> #{params.startDate}
+                         or  o.estimate_close_date <![CDATA[ >= ]]> #{params.startDate})
+        </if>
+        <if test="params.startDate == null">
+           and  a.status='normal'
+        </if>
+        <if test="params.unitIds !=null">
+            and a.`unit_id` in
+            <foreach item="item" index="index" collection="params.unitIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        </where>
+    </select>
+
+
+    <select id="pageContract" resultType="com.rihao.property.modules.lease.contract.vo.ContractSettleVo">
+        SELECT c.id,c.`code`,e.`name` as ent_name, e.`id` as entId,p.`name` AS park_name,p.`id` AS parkId,
+        c.`rent`,c.`area`,c.`sign_date`,c.`lease_start_date`,c.`due_date`,c.`biz_type`,c.`sign_up_status`,
+        c.`create_by`, c.`create_time`
+        FROM tb_contract c JOIN tb_ent e ON c.`ent_id` = e.`id`
+        LEFT JOIN tb_park p ON p.id = c.`park_id`
+        <where>
+            <if test="param2.code">
+                and c.code = #{param2.code}
+            </if>
+            <if test="param2.entName">
+                and e.name like concat('%',#{param2.entName},'%')
+            </if>
+            <if test="param2.startTime">
+                and c.`lease_start_date` <![CDATA[ >= ]]> #{param2.startTime}
+            </if>
+            <if test="param2.endTime">
+                and c.`due_date` <![CDATA[ <= ]]> #{param2.endTime}
+            </if>
+            <if test="param2.status != null">
+                and c.sign_up_status = #{param2.status}
+            </if>
+            <if test="param2.parkId">
+                and p.id = #{param2.parkId}
+            </if>
+            <if test="param2.buildingId">
+                and c.building_ids like  concat('%',#{param2.buildingId},'%')
+            </if>
+            <if test="param2.parkIds !=null">
+                and c.park_id in
+                <foreach item="item" index="index" collection="param2.parkIds.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            and c.sign_up_status != 5
+        </where>
+    </select>
+    <select id="groupStatus"
+            resultType="com.rihao.property.modules.report.vo.ParkStatisticVo$ContractStateNumStatisticVo">
+        SELECT sign_up_status AS STATUS, COUNT(1) AS nums
+        FROM tb_contract
+        WHERE sign_up_status IS NOT NULL
+        GROUP BY sign_up_status
+    </select>
+
+    <select id="selectContractByDueDate" resultType="com.rihao.property.modules.lease.contract.entity.Contract">
+        SELECT *
+        from tb_contract c
+        WHERE (estimate_close = 0 or estimate_close = null ) and (
+            DATE_ADD(c.due_date,INTERVAL 1 DAY) =DATE_FORMAT(now(),'%Y-%m-%d') or
+            DATE_ADD(c.estimate_close_date,INTERVAL 1 DAY) =  DATE_FORMAT(now(),'%Y-%m-%d')
+            )
+          and sign_up_status=5
+    </select>
+
+    <select id="selectContractByToDayStart" resultType="com.rihao.property.modules.lease.contract.entity.Contract">
+        SELECT *
+        from tb_contract c
+        WHERE (estimate_close = 0 or estimate_close = null ) and
+              c.lease_start_date =DATE_FORMAT(now(),'%Y-%m-%d')
+            and c.status='wait_pre'
+    </select>
+
+    <select id="selectEntIdByContract" resultType="java.lang.Long">
+        select a.ent_id from  (
+        SELECT c.park_id,c.ent_id as 'ent_id'
+        FROM tb_contract c JOIN tb_ent e ON c.`ent_id` = e.`id`
+        where  c.status in('running','stop')
+            <if test="params.entName">
+                and e.name like concat('%',#{params.entName},'%')
+            </if>
+            <if test="params.parkId">
+                and c.park_id = #{params.parkId}
+            </if>
+            <if test="params.leaseStartDate !=null and params.dueDate !=null">
+                and ((c.lease_start_date <![CDATA[ < ]]> #{params.leaseStartDate}
+                         and (  #{params.leaseStartDate} <![CDATA[ <= ]]> c.estimate_close_date
+                                    or #{params.leaseStartDate} <![CDATA[ <= ]]> c.due_date)  ) or c.lease_start_date <![CDATA[ >= ]]> #{params.leaseStartDate} )
+            </if>
+            <if test="params.parkIds !=null">
+                and c.park_id in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        group by c.park_id,c.ent_id) a
+    </select>
+
+    <select id="selectContractByUnitAndDate" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        SELECT *
+        from tb_contract o left join
+            tb_contract_unit b on o.id=b.contract_id
+        WHERE  b.unit_id=#{params.unit} and
+        ((
+        o.estimate_close_date IS NULL
+        AND o.due_date >= #{params.leaseStartDate}
+        AND o.lease_start_date <![CDATA[ <= ]]> #{params.dueDate}
+        )
+        OR (
+        o.estimate_close_date IS NOT NULL
+        AND o.estimate_close_date >= #{params.leaseStartDate}
+        AND o.lease_start_date <![CDATA[ <= ]]> #{params.dueDate}
+        ))
+    </select>
+
+    <select id="selectContractByLeaseReportParam" resultType="com.rihao.property.modules.lease.contract.vo.ContractVo">
+        SELECT o.*
+        FROM tb_contract o
+        where  o.status in ('running','stop')
+            <if test="params.parkId !=null">
+                and o.park_id = #{params.parkId}
+            </if>
+            <if test="params.entId !=null">
+                and o.ent_id = #{params.entId}
+            </if>
+            <if test="params.entName !=null">
+                and o.ent_name LIKE concat('%',#{params.entName},'%')
+            </if>
+            <if test="params.leaseStartDate !=null and params.dueDate !=null">
+                and ((o.lease_start_date <![CDATA[ < ]]> #{params.leaseStartDate}
+                and (  #{params.leaseStartDate} <![CDATA[ <= ]]> o.estimate_close_date
+                or #{params.leaseStartDate} <![CDATA[ <= ]]> o.due_date)  ) or o.lease_start_date <![CDATA[ >= ]]> #{params.leaseStartDate} )
+            </if>
+            <if test="params.parkIds !=null">
+                and o.`park_id` in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+    </select>
+
+
+</mapper>

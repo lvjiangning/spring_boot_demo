@@ -1,0 +1,25 @@
+package $!{package.Entity.replace('entity','vo')};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+
+/**
+ * <p>
+ * 视图实体
+ * </p>
+ *
+ * @author ${author}
+ * @date ${date}
+ * @description
+ */
+@Data
+@ApiModel
+@Accessors(chain = true)
+public class ${entity}Vo implements Serializable {
+
+    private Long id;
+}

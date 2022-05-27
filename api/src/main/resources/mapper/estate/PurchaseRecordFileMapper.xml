@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.estate.mapper.PurchaseRecordFileMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.estate.vo.PurchaseRecordFileVo">
+        SELECT o.*, p.winning_company as winning_company
+        FROM tb_purchase_record_file o join tb_purchase_record p on o.record_id = p.id
+        <where>
+            <if test="params.recordId !=null">
+                and o.`record_id` = #{params.recordId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

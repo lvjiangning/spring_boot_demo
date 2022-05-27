@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.estate.mapper.BuildingMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.estate.vo.BuildingVo">
+        SELECT o.*, p.name as parkName
+        FROM tb_building o join tb_park p on o.park_id = p.id
+        <where>
+            <if test="params.name !=null">
+                and o.`name` LIKE #{params.name}
+            </if>
+            <if test="params.buildingIds !=null">
+                and o.`id` in (#{params.buildingIds})
+            </if>
+            <if test="params.establishId !=null">
+                and o.`establish_id` = #{params.establishId}
+            </if>
+            <if test="params.parkId !=null">
+                and o.`park_id` = #{params.parkId}
+            </if>
+        </where>
+    </select>
+    <select id="selectBasic" resultType="com.rihao.property.modules.lease.contract.dto.BuildingBasicDTO">
+        SELECT b.id, b.`name`, p.id AS park_id, p.`name` AS park_name
+        FROM tb_building b
+                 JOIN tb_park p ON b.`park_id` = p.`id`
+        where b.id = #{_parameter}
+    </select>
+
+    <select id="findBuildingByLikeName" resultType="com.rihao.property.modules.estate.entity.Building">
+        SELECT o.*, p.name as parkName
+        FROM tb_building o join tb_park p on o.park_id = p.id
+        <where>
+            <if test="params.name !=null">
+                and o.`name` LIKE concat('%',#{params.name},'%')
+            </if>
+            <if test="params.parkId !=null">
+                and o.`park_id` = #{params.parkId}
+            </if>
+            <if test="params.likeParam !=null">
+                and ( o.`name` LIKE concat('%',#{params.likeParam},'%')
+                    or p.name LIKE concat('%',#{params.likeParam},'%')
+                    )
+            </if>
+            <if test="params.parkIds !=null">
+                and o.`park_id` in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

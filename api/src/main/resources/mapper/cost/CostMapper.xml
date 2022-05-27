@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.cost.mapper.CostMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.cost.vo.CostVo">
+        SELECT a.id, tc.code, a.amount,a.cost_time, tc.ent_name as ent_name, a.type_id, a.status, tc.contact as
+        contact, tc.contact_phone_number as contact_phone_number, tc.id as contract_id, tc.price, tc.area, tc.unit
+        FROM tb_cost a
+        join tb_contract tc on a.contract_id = tc.id
+        where a.type_id != 3
+        <if test="params.entId !=null">
+            and a.`ent_id` = #{params.entId}
+        </if>
+        <if test="params.contractId !=null">
+            and a.`contract_id` = #{params.contractId}
+        </if>
+        <if test="params.costTime !=null">
+            and a.`cost_time` = #{params.costTime}
+        </if>
+        <if test="params.status !=null">
+            and a.`status` = #{params.status}
+        </if>
+    </select>
+
+    <select id="selectDeposit" resultType="com.rihao.property.modules.cost.vo.CostVo">
+        SELECT a.id, tc.code, a.amount,a.cost_time, tc.ent_name as ent_name, a.type_id, a.status, tc.contact as
+        contact, tc.contact_phone_number as contact_phone_number, tc.id as contract_id
+        FROM tb_cost a
+        join tb_contract tc on a.contract_id = tc.id
+        where a.type_id = 3
+        <if test="params.entId !=null">
+            and a.`ent_id` LIKE #{params.entId}
+        </if>
+    </select>
+</mapper>

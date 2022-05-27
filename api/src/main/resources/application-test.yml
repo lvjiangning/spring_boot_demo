@@ -1,0 +1,20 @@
+app:
+  # 是否启用ansi控制台输出有颜色的字体
+  enable-ansi: true
+server:
+  port: 8813
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.202:3306/property_test?useUnicode=true&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+    username: property_test
+    password: property_test
+
+  # Redis配置
+  redis:
+    host: 192.168.1.145
+    port: 6379
+    password:
+    database: 2

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.rihao.property</groupId>
+    <artifactId>api-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.anteng.cloud</groupId>
+        <artifactId>anteng-cloud-parent</artifactId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>api</module>
+        <module>monitor</module>
+    </modules>
+	
+	<repositories>
+        <repository>
+            <id>yh-repos</id>
+            <name>YH Repository</name>
+            <url>http://192.168.1.203:8089/repository/yhpublic</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <guava.version>22.0</guava.version>
+        <joda.time.version>2.7</joda.time.version>
+        <lombok.version>1.16.20</lombok.version>
+        <common.io.version>2.4</common.io.version>
+        <common.fileupload.version>1.3</common.fileupload.version>
+        <common.lang3.version>3.6</common.lang3.version>
+        <commons.collections4.version>4.1</commons.collections4.version>
+        <weixin-java-tools.version>3.0.0</weixin-java-tools.version>
+        <anteng.common.version>1.0-SNAPSHOT</anteng.common.version>
+        <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <fastjson.version>1.2.54</fastjson.version>
+        <druid.starter.version>1.1.10</druid.starter.version>
+        <swagger2.version>2.9.2</swagger2.version>
+        <mybatis.plus.version>3.3.2</mybatis.plus.version>
+        <shiro.spring.version>1.4.0</shiro.spring.version>
+        <jwt.version>3.8.3</jwt.version>
+        <spring-boot-admin.version>2.2.0</spring-boot-admin.version>
+        <hutool.version>5.7.16</hutool.version>
+        <ini4j.version>0.5.4</ini4j.version>
+        <easypoi-version>4.2.0</easypoi-version>
+        <poi-version>5.0.0</poi-version>
+        <jodconverter-version>2.2.2</jodconverter-version>
+        <openoffice-version>3.0.1</openoffice-version>
+    </properties>
+
+    <dependencyManagement>
+
+
+
+        <dependencies>
+            <!-- https://mvnrepository.com/artifact/com.artofsolving/jodconverter -->
+            <dependency>
+                <groupId>com.artofsolving</groupId>
+                <artifactId>jodconverter</artifactId>
+                <version>${jodconverter-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.artofsolving</groupId>
+                <artifactId>jodconverter-cli</artifactId>
+                <version>${jodconverter-version}</version>
+
+            </dependency>
+
+            <!-- openoffice -->
+            <dependency>
+                <groupId>org.openoffice</groupId>
+                <artifactId>juh</artifactId>
+                <version>${openoffice-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openoffice</groupId>
+                <artifactId>jurt</artifactId>
+                <version>${openoffice-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openoffice</groupId>
+                <artifactId>ridl</artifactId>
+                <version>${openoffice-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openoffice</groupId>
+                <artifactId>unoil</artifactId>
+                <version>${openoffice-version}</version>
+            </dependency>
+            <!-- anteng-common -->
+            <dependency>
+                <groupId>com.anteng.common</groupId>
+                <artifactId>security</artifactId>
+                <version>${anteng.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.anteng.common</groupId>
+                <artifactId>lang</artifactId>
+                <version>${anteng.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.anteng.common</groupId>
+                <artifactId>lang-html</artifactId>
+                <version>${anteng.common.version}</version>
+            </dependency>
+
+            <!-- commons jar-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${common.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${common.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${common.fileupload.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons.collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.3</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- ini格式处理 -->
+            <dependency>
+                <groupId>org.ini4j</groupId>
+                <artifactId>ini4j</artifactId>
+                <version>${ini4j.version}</version>
+            </dependency>
+
+
+            <!--其它 -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda.time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- wx -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java-tools.version}</version>
+            </dependency>
+            <!--test数据库-->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.199</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.3.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>2.2</version>
+            </dependency>
+            <!--使用 lombok 简化 Java 代码-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- 对象属性复制 https://mapstruct.org/ -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <!-- Alibaba -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring</artifactId>
+                <version>${shiro.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <!-- swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+
+            <!-- esypoi -->
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-spring-boot-starter</artifactId>
+                <version>${easypoi-version}</version>
+            </dependency>
+
+            <!--<dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi-version}</version>
+            </dependency>-->
+
+            <!-- spring boot admin start -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>de.codecentric</groupId>
+                        <artifactId>spring-boot-admin-server-cloud</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin.version}</version>
+            </dependency>
+            <!-- spring boot admin end -->
+        </dependencies>
+    </dependencyManagement>
+
+</project>

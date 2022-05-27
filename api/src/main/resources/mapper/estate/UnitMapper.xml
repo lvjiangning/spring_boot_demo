@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.estate.mapper.UnitMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.estate.vo.UnitVo">
+        SELECT o.*, f.floor_no as floor_no, b.name as building_name, p.name as park_name ,p.id as park_id
+        FROM tb_unit o
+        join tb_floor f on o.floor_id = f.id
+        join tb_building b on o.building_id = b.id
+        join tb_park p on b.park_id = p.id
+        <where>
+            <if test="params.parkId !=null">
+                and b.park_id = #{params.parkId}
+            </if>
+            <if test="params.likeParam !=null">
+                and (
+                o.`unit_no` LIKE concat('%',#{params.likeParam},'%')
+                or b.`name` LIKE concat('%',#{params.likeParam},'%')
+                or p.`name` LIKE concat('%',#{params.likeParam},'%')
+                )
+            </if>
+            <if test="params.floorId !=null">
+                and o.floor_id = #{params.floorId}
+            </if>
+            <if test="params.buildingId !=null">
+                and o.building_id = #{params.buildingId}
+            </if>
+            <if test="params.unitNo !=null">
+                and o.unit_no like #{params.unitNo}
+            </if>
+            <if test="params.status !=null">
+                and o.status = #{params.status}
+            </if>
+            <if test="params.delFlag !=null">
+                and o.del_flag = #{params.delFlag}
+            </if>
+            <if test="params.parkIds !=null">
+                and b.park_id in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by p.id,o.id
+    </select>
+
+    <select id="selectByQueryParamSum" resultType="java.util.Map">
+        SELECT
+         sum(ifnull(o.usable_area,0)) as 'usableArea',
+        sum(ifnull(o.built_up_area,0)) as 'builtUpArea'
+        FROM tb_unit o
+        join tb_floor f on o.floor_id = f.id
+        join tb_building b on o.building_id = b.id
+        join tb_park p on b.park_id = p.id
+        <where>
+            <if test="params.parkId !=null">
+                and b.park_id = #{params.parkId}
+            </if>
+            <if test="params.likeParam !=null">
+                and (
+                o.`unit_no` LIKE concat('%',#{params.likeParam},'%')
+                or b.`name` LIKE concat('%',#{params.likeParam},'%')
+                or p.`name` LIKE concat('%',#{params.likeParam},'%')
+                )
+            </if>
+            <if test="params.floorId !=null">
+                and o.floor_id = #{params.floorId}
+            </if>
+            <if test="params.buildingId !=null">
+                and o.building_id = #{params.buildingId}
+            </if>
+            <if test="params.unitNo !=null">
+                and o.unit_no like #{params.unitNo}
+            </if>
+            <if test="params.status !=null">
+                and o.status = #{params.status}
+            </if>
+            <if test="params.delFlag !=null">
+                and o.del_flag = #{params.delFlag}
+            </if>
+            <if test="params.parkIds !=null">
+                and b.park_id in
+                <foreach item="item" index="index" collection="params.parkIds.split(',')" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="statisticUnitSettle"
+            resultType="com.rihao.property.modules.report.vo.ParkStatisticVo$UnitSettleStatisticVo">
+        SELECT t.frees / (t.frees + t.settles) AS free_rate, t.settles / (t.frees + t.settles) AS settle_rate
+        FROM (
+                 SELECT (SELECT IFNULL(COUNT(1), 0) FROM tb_unit WHERE STATUS = 'free') AS frees,
+                        (SELECT IFNULL(COUNT(1), 0) FROM tb_unit WHERE STATUS != 'free') AS settles FROM DUAL) AS t
+    </select>
+</mapper>

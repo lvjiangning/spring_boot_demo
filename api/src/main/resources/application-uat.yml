@@ -1,0 +1,28 @@
+app:
+  # 是否启用ansi控制台输出有颜色的字体
+  enable-ansi: true
+server:
+  port: 8814
+  servlet:
+    context-path: /
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.16.0.5:3306/property_uat?useUnicode=true&serverTimezone=CTT&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+    username: property_uat
+    password: ahEK4l3do0JutRGb
+
+  # Redis配置
+  redis:
+    host: 172.16.0.15
+    port: 6379
+    password: YwqO5986zbRNULCP
+    database: 2
+
+
+#上传路径
+file.upload.path: /data/kcw/file
+#启动远程附件服务
+enableFileRemoteService : false
+#swftoolsSetupDir 安装路径
+swftoolsSetupDir :

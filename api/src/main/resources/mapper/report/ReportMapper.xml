@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.report.mapper.ReportMapper">
+
+    <select id="selectLanUseReportByQueryParam" resultType="com.rihao.property.modules.report.vo.LandUseReportVo">
+        select tc.code, tb.name as buildingName, tu.unit_no, tu.usable_area, tu.built_up_area, tc.lease_term, tsib.approval_date, tc.ent_name
+        from tb_unit tu
+                 join tb_contract_unit tcu on tu.id = tcu.unit_id
+                 join tb_building tb on tu.building_id = tb.id
+                 join tb_contract tc on tc.id = tcu.contract_id
+                 join tb_batch_detail tbd on tbd.id = tc.batch_detail_id
+                 join tb_settle_in_batch tsib on tsib.id = tbd.batch_id
+    </select>
+</mapper>

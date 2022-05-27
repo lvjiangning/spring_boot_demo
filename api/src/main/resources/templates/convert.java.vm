@@ -1,0 +1,24 @@
+package $!{package.Entity.replace('entity','convert')};
+
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import $!{package.Entity}.${entity};
+import $!{package.Entity.replace('entity','vo')}.${entity}Vo;
+
+import java.util.List;
+/**
+ * <p>
+ * 实体转换器
+ * </p>
+ *
+ * @author ${author}
+ * @date ${date}
+ * @description
+ */
+@Mapper
+public interface ${entity}Convert {
+
+    ${entity}Convert INSTANCE = Mappers.getMapper(${entity}Convert.class);
+
+    List<${entity}Vo> entity2ListItemBatch(List<${entity}> list);
+}

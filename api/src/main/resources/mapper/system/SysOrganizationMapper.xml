@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rihao.property.modules.system.mapper.SysOrganizationMapper">
+
+    <select id="selectByQueryParam" resultType="com.rihao.property.modules.system.vo.SysOrganizationListVo">
+        SELECT o.id,o.`name`,o.parent_id,o.`code`,o.establishment_number,
+        (SELECT p.`name` FROM tb_sys_organization p WHERE p.id=o.parent_id) AS parentName,
+        (SELECT `value` FROM tb_sys_dict WHERE id=o.type) AS type,
+        (SELECT `value` FROM tb_sys_dict WHERE id=o.`level`) AS level,
+        (SELECT COUNT(1) FROM tb_user t WHERE t.organization_id=o.id AND t.deleted=0) currentNumber
+        FROM tb_sys_organization o WHERE o.deleted=0
+        <if test="params.name !=null">
+            and o.`name` LIKE #{params.name}
+        </if>
+        <if test="params.code !=null">
+            and o.`code` LIKE #{params.code}
+        </if>
+    </select>
+
+
+</mapper>
